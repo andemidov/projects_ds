@@ -22,7 +22,7 @@
 | [**linear algebra**](https://github.com/andemidov/projects_ds/tree/main/linear%20algebra) Разработка модели анонимизации персональных данных | Разработка такого метода преобразования данных, чтобы по ним было сложно восстановить персональную информацию. Защитита данных, чтобы при преобразовании качество моделей машинного обучения не ухудшилось | *Python, NumPy, Scikit-learn* |
 | [**numerical methods**](https://github.com/andemidov/projects_ds/tree/main/numerical%20methods) Разработка системы рекомендации стоимости автомобиля на основе его описания | На основе исторических данных построение модели для определения стоимости автомобиля | Python, Pandas, lightgbm, catboost |
 | [**time series**](https://github.com/andemidov/projects_ds/tree/main/time%20series) Разработка системы предсказания объема заказа| Чтобы привлекать больше водителей такси в период пиковой нагрузки в аэропорту, построена модель для прогноза количества заказов такси на следующий час | *Python, Pandas, Scikit-learn, statsmodels* |
-| **data preprocessing**| kgfu | srsrs |
+| [**SQL**](https://github.com/andemidov/projects_ds/tree/main/SQL) (PostgreSQL)| Работать с базой данных, которая хранит информацию о венчурных фондах и инвестициях в компании-стартапы | *Срезы данных, агрегирующие функции, сортировка, связь таблиц, объединение таблиц, подзапросы и временные таблицы, PySpark, оконные функции* |
 | **data preprocessing**| kgfu | srsrs |
 | **data preprocessing**| kgfu | srsrs |
 | **data preprocessing**| kgfu | srsrs |
