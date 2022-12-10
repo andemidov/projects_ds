@@ -1,0 +1,199 @@
+Here are some examples from my SQL practice.
+
+
+----------------------------------------------------------------------------------------
+
+from pyspark.sql import SparkSession
+
+APP_NAME = "DataFrames"
+SPARK_URL = "local[*]"
+
+spark = SparkSession.builder.appName(APP_NAME) \
+        .config('spark.ui.showConsoleProgress', 'false') \
+        .getOrCreate()
+
+taxi = spark.read.load('/datasets/pickups_terminal_5.csv', 
+                       format='csv', header='true', inferSchema='true')
+
+taxi = taxi.fillna(0)
+
+taxi.registerTempTable("taxi")
+
+print(spark.sql('select hour, avg(pickups) from taxi group by hour order by avg(pickups) desc').show(10));
+
+----------------------------------------------------------------------------------------
+
+with a as (select distinct cast(date_trunc('month', created_at) as date),
+                  sum(costs) over(partition by cast(date_trunc('month', created_at) as date)) as su
+           from tools_shop.costs)
+           
+select *,
+       a.su - LAG(a.su,1,a.su) over (order by cast(date_trunc('month', a.date_trunc) as date))
+from a
+
+----------------------------------------------------------------------------------------
+
+with
+a as (select country_code,
+             avg(funding_total) as avg_11
+      from company
+      where extract(year from founded_at) = 2011
+      group by country_code),
+      
+b as (select country_code,
+             avg(funding_total) as avg_12
+      from company
+      where extract(year from founded_at) = 2012
+      group by country_code),
+  
+c as (select country_code,
+             avg(funding_total) as avg_13
+      from company
+      where extract(year from founded_at) = 2013
+      group by country_code)
+      
+select a.country_code,
+       a.avg_11,
+       b.avg_12,
+       c.avg_13
+from a 
+inner join b on a.country_code = b.country_code
+inner join c on a.country_code = c.country_code
+order by a.avg_11 desc;
+
+----------------------------------------------------------------------------------------
+
+with 
+a as (select extract(month from fr.funded_at) as one,
+             count(distinct f.name)
+      from investment as i
+      join fund as f on i.fund_id = f.id
+      join funding_round as fr on i.funding_round_id = fr.id
+      where extract(year from fr.funded_at) between 2010 and 2013
+        and f.country_code = 'USA'
+      group by one),                                              
+b as (select extract(month from acquired_at) as two,
+             count(acquired_company_id),
+             sum(price_amount)
+      from acquisition as ac
+      where extract(year from acquired_at) between 2010 and 2013
+      group by two)
+      
+select a.one,
+       a.count as count_fund,
+       b.count as count_company,
+       b.sum
+from a join b on a.one = b.two;
+
+----------------------------------------------------------------------------------------
+
+with 
+x as (select c.name,
+             a.price_amount,
+             a.acquired_company_id
+      from acquisition as a
+      left join company as c on a.acquiring_company_id = c.id
+      where a.price_amount > 0),
+      
+y as (select id,
+             name,
+             funding_total
+      from company
+      where funding_total > 0)
+      
+select x.name,
+       x.price_amount,
+       y.name,
+       y.funding_total,
+       round(x.price_amount / y.funding_total)
+from x inner join y on x.acquired_company_id = y.id
+order by price_amount desc,
+      y.name
+limit 10;
+
+----------------------------------------------------------------------------------------
+
+with 
+a as (select id
+      from people
+      where company_id in (select id
+                           from company
+                           where name =  'Facebook')),
+b as (select a.id,
+             e.instituition
+      from education as e
+      inner join a on e.person_id = a.id),
+      
+c as (select *,
+             ROW_NUMBER() over(partition by b.id, b.instituition) as row_instituition
+      from b),
+
+d as (select c.id, count(c.instituition)
+      from c
+      group by c.id)
+      
+select avg(d.count)
+from d
+
+----------------------------------------------------------------------------------------
+
+with 
+a as (select distinct id
+      from people
+      where company_id in (select id
+                           from company
+                           where name in (select distinct name
+                                          from company
+                                          where status = 'closed'
+                                            and id in (select company_id
+                                                       from funding_round
+                                                       where is_first_round = 1
+                                                         and is_last_round = 1)))),
+b as (select a.id,
+             e.instituition
+      from education as e
+      inner join a on e.person_id = a.id),
+      
+c as (select *,
+             ROW_NUMBER() over(partition by b.id, b.instituition) as row_instituition
+      from b),
+      
+d as (select c.id, count(c.instituition)
+      from c
+      group by c.id)
+
+select avg(d.count)
+from d
+
+----------------------------------------------------------------------------------------
+
+from pyspark.sql import SparkSession
+
+APP_NAME = "DataFrames"
+SPARK_URL = "local[*]"
+
+spark = SparkSession.builder.appName(APP_NAME) \
+        .config('spark.ui.showConsoleProgress', 'false') \
+        .getOrCreate()
+
+taxi = spark.read.load('/datasets/pickups_terminal_5.csv', 
+                       format='csv', header='true', inferSchema='true')
+
+taxi = taxi.fillna(0)
+
+taxi.registerTempTable("taxi")
+
+print(spark.sql("SELECT count(distinct date) FROM taxi where pickups > 200").show())
+
+----------------------------------------------------------------------------------------
+
+SELECT month.billing_country
+FROM
+   (SELECT billing_country,
+           AVG(total) AS avg_month
+    FROM invoice
+    WHERE EXTRACT(YEAR FROM CAST(invoice_date AS date)) = 2009
+      AND EXTRACT(MONTH FROM CAST(invoice_date AS date)) IN ('2','5','7','10')
+    GROUP BY billing_country, EXTRACT(MONTH FROM CAST(invoice_date AS date))) AS month
+GROUP BY month.billing_country
+HAVING SUM(month.avg_month) > 10;
