@@ -25,7 +25,7 @@
 | [**SQL**](https://github.com/andemidov/projects_ds/tree/main/SQL) (PostgreSQL)| Работа с базой данных, которая хранит информацию о венчурных фондах и инвестициях в компании-стартапы | *Срезы данных, агрегирующие функции, сортировка, связь таблиц, объединение таблиц, подзапросы и временные таблицы, PySpark, оконные функции* |
 | [**computer vision**](https://github.com/andemidov/projects_ds/tree/main/computer%20vision) Определение возраста по фотографии | Строится модель, которая по фотографии определит приблизительный возраст человека | *Python, Keras* |
 | [**project: forecasting the outflow of the telecom operator's client**](https://github.com/andemidov/projects_ds/tree/main/Forecasting%20the%20outflow%20of%20the%20telecom%20operator's%20client%20(ML)) Прогнозирование ухода клиента| Cоздание классифицирующей модели, предсказывающей вероятнотность того, что клиент планирует уйти или остаться. | *Python, Pandas, lightgbm, catboost, Scikit-learn*|
-| [****]()| kgfu | srsrs |
+| [**simple web application**](https://github.com/andemidov/projects_ds/tree/main/flask) Flask| Создание приложения для предсказания цены квартиры по описанию | *Flask, Scikit-learn* |
 | [****]()| kgfu | srsrs |
 | [****]()| kgfu | srsrs |
 | [****]()| kgfu | srsrs |
